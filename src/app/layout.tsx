@@ -1,4 +1,4 @@
-import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import { ClerkProvider } from '@clerk/nextjs';
 import { Geist, Geist_Mono } from "next/font/google";
 import Footer from "./component/Footer";
 import Header, { Header1, Header2 } from "./component/Header";
@@ -29,9 +29,6 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          {/* Clerk Authentication: Show sign-in button when signed out */}
-          
-          
           {/* Your layout components */}
           <Header />
           <Header1 cart={[]} />

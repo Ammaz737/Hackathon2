@@ -23,7 +23,6 @@ interface Product {
 
 const ProductCards: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [cart, setCart] = useState<Product[]>([]);
 
   // Fetch products from the external API
   const fetchProducts = async () => {
@@ -88,8 +87,6 @@ const ProductCards: React.FC = () => {
   // Fetch products on component mount
   useEffect(() => {
     fetchProducts();
-    const storedCart = getCartItems();
-    setCart(storedCart);
   }, []);
 
   return (

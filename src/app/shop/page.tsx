@@ -1,11 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
-import { addToCart, getCartItems } from "@/app/actions/actions"; // Import the action functions
-import { CiShoppingCart } from "react-icons/ci";
-import { CiHeart } from "react-icons/ci";
+import { addToCart } from "@/app/actions/actions"; // Import only the necessary action function
+import { CiShoppingCart, CiHeart } from "react-icons/ci";
 import Swal from "sweetalert2";
 import Image from "next/image";
-import Link from "next/link";
 
 interface Product {
   _id: string;
