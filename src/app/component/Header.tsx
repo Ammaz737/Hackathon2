@@ -51,7 +51,7 @@ export const Header1: React.FC<Header1Props> = ({ cart }) => {
         {/* Logo */}
         <div className="flex items-center">
           <Image
-            src="/Image/comforty.png"
+            src="/image/comforty.png"
             alt="Comforty Logo"
             className="w-32 h-auto"
             width={128}
