@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { getCartItems } from "../actions/actions"; // Your cart items fetching function
 import Swal from "sweetalert2"; // SweetAlert
 import Image from "next/image";
+import { client } from "@/sanity/lib/client";
 
 interface Product {
   _id: string;
@@ -10,7 +11,7 @@ interface Product {
   price: number;
   description: string;
   imageUrl: string;
-  quantity: number; // This should track the quantity of the item in the cart
+  quantity: number;
 }
 
 const Checkout = () => {
@@ -33,10 +34,10 @@ const Checkout = () => {
     setCartItems(getCartItems());
   }, []);
 
-  // Calculate the total price using quantity of the items in the cart
+  // Calculate the total price
   const totalPrice = cartItems
     .reduce((acc, item) => acc + item.price * item.quantity, 0)
-    .toFixed(2); // Use item.quantity instead of item.inventory
+    .toFixed(2);
 
   // Handle form field changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -78,7 +79,7 @@ const Checkout = () => {
   };
 
   // Handle order placement
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if (validateForm()) {
       Swal.fire({
         title: "Are you sure you want to place the order?",
@@ -87,12 +88,51 @@ const Checkout = () => {
         showCancelButton: true,
         confirmButtonText: "Yes, Place Order",
         cancelButtonText: "No, Cancel",
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
-          // Handle the actual order placement logic here
-          Swal.fire("Order Placed!", "Your order has been successfully placed.", "success");
-          // Optionally, reset cart or redirect
-          // Example: clearCart();
+          try {
+            // Create the order payload
+            const orderData = {
+              _type: "orders",
+              orderNumber: `ORD-${Date.now()}`,
+              customerName: formData.fullName,
+              customerEmail: formData.email,
+              orderDate: new Date().toISOString(),
+              products: cartItems.map((item) => ({
+                _type: "object",
+                product: { _type: "reference", _ref: item._id },
+                quantity: item.quantity,
+                price: item.price,
+              })),
+              totalAmount: parseFloat(totalPrice),
+              status: "pending",
+              shippingAddress: {
+                _type: "object",
+                street: formData.address,
+                city: "Sample City", // Replace with dynamic input if needed
+                state: "Sample State",
+                postalCode: "12345",
+                country: "Sample Country",
+              },
+            };
+
+            // Save to Sanity
+            await client.create(orderData);
+
+            Swal.fire("Order Placed!", "Your order has been successfully placed.", "success");
+
+            // Clear form and cart
+            setCartItems([]);
+            setFormData({
+              fullName: "",
+              email: "",
+              address: "",
+              paymentMethod: "Credit Card",
+            });
+          } catch (error) {
+            Swal.fire("Error", "Failed to place the order. Please try again.", "error");
+            console.error("Error placing order:", error);
+          }
         } else {
           Swal.fire("Cancelled", "Your order has not been placed.", "info");
         }
@@ -209,7 +249,7 @@ const Checkout = () => {
 
               <button
                 type="button"
-                onClick={handlePlaceOrder} // Trigger SweetAlert on button click
+                onClick={handlePlaceOrder}
                 className="w-full bg-blue-600 text-white py-3 mt-6 rounded-md hover:bg-blue-700 transition duration-200"
               >
                 Place Order

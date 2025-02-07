@@ -1,4 +1,4 @@
-interface Product {
+export interface Product {
     _id: string;
     title: string;
     wishlist: string;
@@ -8,7 +8,8 @@ interface Product {
     imageUrl: string;
     label?: string;
     labelColor?: string;
-    quantity: number;
-    cart: string;
+    tags: string[];
     inventory: number;
+    quantity: number;
   }
+  

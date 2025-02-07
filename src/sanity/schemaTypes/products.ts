@@ -1,11 +1,12 @@
 import { defineType } from "sanity";
 
 
-export const productSchema = defineType({
+export const product = defineType({
   name: "products",
   title: "Products",
   type: "document",
   fields: [
+    
     {
       name: "title",
       title: "Product Title",

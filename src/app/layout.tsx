@@ -1,7 +1,9 @@
 import { ClerkProvider } from '@clerk/nextjs';
 import { Geist, Geist_Mono } from "next/font/google";
 import Footer from "./component/Footer";
-import Header, { Header1, Header2 } from "./component/Header";
+import { Header } from './component/Header';
+import { Header1 } from './component/Header';
+import { Header2 } from './component/Header';
 import './globals.css';
 
 // Fonts setup
@@ -31,7 +33,6 @@ export default function RootLayout({
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           {/* Your layout components */}
           <Header />
-          <Header1 cart={[]} />
           <Header2 />
           {children}
           <Footer />

@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { IoFilterSharp } from "react-icons/io5";
 import { categorySchema } from "@/sanity/schemaTypes/categories";// Ensure correct import
 
@@ -43,9 +44,11 @@ const Hero = () => {
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
             Best Furniture Collection For Your Interior.
           </h1>
-          <button className="mt-6 px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-blue-500">
-            Shop Now
-          </button>
+        <Link href="/products">
+        <button className="mt-6 px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-blue-500">
+            Shop Now 
+        </button>
+        </Link>
         </div>
 
         <div className="md:w-1/2 flex justify-center">

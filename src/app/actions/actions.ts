@@ -10,47 +10,51 @@ interface Product {
   labelColor?: string;
   tags: string[];
   inventory: number;
-  quantity: number; // This will track quantity in the cart and for selected items
+  quantity: number; // Track selected quantity for the cart
 }
 
-export const addToCart = (product: Product, quantity: number) => {
-  const cart: Product[] = JSON.parse(localStorage.getItem('cart') || '[]');
+// Add product to cart with exact selected quantity
+export const addToCart = (product: Omit<Product, "quantity">, selectedQuantity: number) => {
+  const cart: Product[] = JSON.parse(localStorage.getItem("cart") || "[]");
 
-  // Ensure that quantity does not exceed available inventory
-  const validQuantity = Math.min(quantity, product.inventory);
+  // Ensure quantity does not exceed available inventory
+  const validQuantity = Math.min(selectedQuantity, product.inventory);
 
   const existingProductIndex = cart.findIndex((item) => item._id === product._id);
 
   if (existingProductIndex !== -1) {
-    // If product exists in cart, update the quantity with the selected amount
-    const newQuantity = cart[existingProductIndex].quantity + validQuantity;
-    cart[existingProductIndex].quantity = Math.min(newQuantity, product.inventory); // Prevent exceeding inventory
+    // If product exists in cart, update the quantity
+    cart[existingProductIndex].quantity = validQuantity;
   } else {
     // Add new product to cart with the selected quantity
     cart.push({ ...product, quantity: validQuantity });
   }
 
-  localStorage.setItem('cart', JSON.stringify(cart));
+  localStorage.setItem("cart", JSON.stringify(cart));
 };
 
+// Remove product from the cart by ID
 export const removeFromCart = (productId: string) => {
-  let cart: Product[] = JSON.parse(localStorage.getItem('cart') || '[]');
+  let cart: Product[] = JSON.parse(localStorage.getItem("cart") || "[]");
   cart = cart.filter((item) => item._id !== productId);
-  localStorage.setItem('cart', JSON.stringify(cart));
+  localStorage.setItem("cart", JSON.stringify(cart));
 };
 
-export const updateCartQuantity = (productId: string, quantity: number) => {
-  const cart: Product[] = JSON.parse(localStorage.getItem('cart') || '[]');
+// Update cart quantity with exact value
+export const updateCartQuantity = (productId: string, newQuantity: number) => {
+  const cart: Product[] = JSON.parse(localStorage.getItem("cart") || "[]");
   const productIndex = cart.findIndex((item) => item._id === productId);
 
   if (productIndex > -1) {
-    const validQuantity = Math.min(Math.max(quantity, 1), cart[productIndex].inventory); // Ensure valid quantity
+    // Ensure quantity does not exceed inventory or drop below 1
+    const validQuantity = Math.min(Math.max(newQuantity, 1), cart[productIndex].inventory);
     cart[productIndex].quantity = validQuantity;
   }
 
-  localStorage.setItem('cart', JSON.stringify(cart));
+  localStorage.setItem("cart", JSON.stringify(cart));
 };
 
+// Fetch cart items
 export const getCartItems = (): Product[] => {
-  return JSON.parse(localStorage.getItem('cart') || '[]');
+  return JSON.parse(localStorage.getItem("cart") || "[]");
 };
