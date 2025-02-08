@@ -16,12 +16,12 @@ export interface Product {
   tags: string[];
 }
 
-type PageProps = {
+interface PageProps {
   params: { id: string };
-};
+}
 
 async function ProductDetail({ params }: PageProps) {
-  if (!params?.id) {
+  if (!params || !params.id) {
     return <div className="text-center py-12">Invalid product ID</div>;
   }
 
@@ -38,13 +38,18 @@ async function ProductDetail({ params }: PageProps) {
     tags
   }`;
 
-  const data: Product[] = await client.fetch(query, { id: params.id });
+  try {
+    const data: Product[] = await client.fetch(query, { id: params.id });
 
-  if (!data || data.length === 0) {
-    return <div className="text-center py-12">Product not found</div>;
+    if (!data || data.length === 0) {
+      return <div className="text-center py-12">Product not found</div>;
+    }
+
+    return <ProductDetailClient product={data[0]} />;
+  } catch (error) {
+    console.error("Sanity fetch error:", error);
+    return <div className="text-center py-12">Error loading product</div>;
   }
-
-  return <ProductDetailClient product={data[0]} />;
 }
 
 export default ProductDetail;
