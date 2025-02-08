@@ -21,7 +21,7 @@ interface PageProps {
 }
 
 async function ProductDetail({ params }: PageProps) {
-  if (!params || !params.id) {
+  if (!params?.id) {
     return <div className="text-center py-12">Invalid product ID</div>;
   }
 
@@ -41,7 +41,7 @@ async function ProductDetail({ params }: PageProps) {
   try {
     const data: Product[] = await client.fetch(query, { id: params.id });
 
-    if (!data || data.length === 0) {
+    if (!data?.length) {
       return <div className="text-center py-12">Product not found</div>;
     }
 
