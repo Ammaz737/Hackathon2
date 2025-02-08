@@ -1,5 +1,6 @@
 import { client } from "@/sanity/lib/client";
 import ProductDetailClient from "@/app/component/ProductDetailClient";
+
 export interface Product {
   _id: string;
   title: string;
@@ -15,8 +16,16 @@ export interface Product {
   tags: string[];
 }
 
-async function ProductDetail({ params }: { params: { id: string } }) {
-  const query = `*[_type == "products" && _id == "${params.id}"]{
+type PageProps = {
+  params: { id: string };
+};
+
+async function ProductDetail({ params }: PageProps) {
+  if (!params?.id) {
+    return <div className="text-center py-12">Invalid product ID</div>;
+  }
+
+  const query = `*[_type == "products" && _id == $id]{
     _id,
     title,
     price,
@@ -29,9 +38,9 @@ async function ProductDetail({ params }: { params: { id: string } }) {
     tags
   }`;
 
-  const data: Product[] = await client.fetch(query);
+  const data: Product[] = await client.fetch(query, { id: params.id });
 
-  if (data.length === 0) {
+  if (!data || data.length === 0) {
     return <div className="text-center py-12">Product not found</div>;
   }
 

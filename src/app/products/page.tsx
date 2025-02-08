@@ -3,7 +3,7 @@ import Image from "next/image";
 import { client } from "@/sanity/lib/client";
 import Link from "next/link";
 import { useState } from "react";
-import SearchAndFilter from "../component/SearchandFilter";
+import SearchAndFilter from "../component/SearchAndFilter";
 import { useEffect } from 'react';
 
 export interface Product {
